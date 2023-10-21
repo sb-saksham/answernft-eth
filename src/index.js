@@ -3,11 +3,49 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toastify/dist/ReactToastify.css';
+import "@rainbow-me/rainbowkit/styles.css";
+
+import { WagmiConfig, configureChains, createConfig } from 'wagmi';
+import { publicProvider } from 'wagmi/providers/public';
+import { mainnet, sepolia, filecoinCalibration, polygonMumbai, scrollSepolia } from 'wagmi/chains';
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+
+const { chains, publicClient, webSocketClient } = configureChains(
+  [mainnet, sepolia, filecoinCalibration, polygonMumbai, scrollSepolia],
+  [
+    jsonRpcProvider({
+      rpc: (_) => ({
+        http: `https://scroll-sepolia.drpc.org/`,
+      }),
+    }),
+    // alchemyProvider({ apiKey: import.meta.env.VITE_APP_ALCHEMY_API_KEY }),
+    publicProvider()
+  ]
+);
+const {connectors} = getDefaultWallets({
+  appName: "AnswerNFT",
+  projectId: "3d2b96069c4e8594a195d3c7cbc1c65c",
+  chains
+});
+const wagmiConfig = createConfig({
+  autoConnect: true,
+  connectors,
+  publicClient,
+  webSocketClient
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
   <React.StrictMode>
-    <App />
+    <WagmiConfig config={wagmiConfig}>
+      <RainbowKitProvider chains={chains}>
+        <App/>
+      </RainbowKitProvider>
+    </WagmiConfig>
   </React.StrictMode>
 );
 
