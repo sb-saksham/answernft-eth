@@ -1,15 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.21;
 
 import "./ICustomERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 
-contract NFTMarketplace is IERC721Receiver, Ownable, Pausable {
-    using SafeMath for uint256;
-
+contract AnswerNFTMarketplace is IERC721Receiver, Ownable, Pausable {
     function pause() public onlyOwner {
         _pause();
     }
@@ -53,7 +50,7 @@ contract NFTMarketplace is IERC721Receiver, Ownable, Pausable {
             IERC721(nftContractAddress).ownerOf(tokenId) == msg.sender,
             "You do not own this NFT"
         );
-        IERC721(nftContractAddress).safeTransferFrom(
+        ICustomERC721(nftContractAddress).safeTransferFrom(
             msg.sender,
             address(this),
             tokenId
@@ -67,7 +64,7 @@ contract NFTMarketplace is IERC721Receiver, Ownable, Pausable {
             "NFT is not listed for sale"
         );
         require(
-            listings[tokenId].price == msg.value,
+            listings[tokenId].price >= msg.value,
             "Incorrect payment amount"
         );
 
@@ -81,10 +78,10 @@ contract NFTMarketplace is IERC721Receiver, Ownable, Pausable {
 
         address seller = listings[tokenId].seller;
         uint256 salePrice = listings[tokenId].price;
-        uint256 feeAmount = salePrice.mul(marketplaceFee).div(100);
+        uint256 feeAmount = (salePrice * marketplaceFee) / 100;
 
         payable(marketplaceAddress).transfer(feeAmount);
-        payable(seller).transfer(salePrice.sub(feeAmount));
+        payable(seller).transfer(salePrice - feeAmount);
         IERC721(nftContractAddress).safeTransferFrom(
             address(this),
             msg.sender,
@@ -103,5 +100,19 @@ contract NFTMarketplace is IERC721Receiver, Ownable, Pausable {
             msg.sender,
             tokenId
         );
+    }
+
+    function getAllListings() public view returns (NFTListing[] memory) {
+        uint256 totalListings = listings.length; // Adjust this as per your contract
+
+        // Create an array to store the listings
+        NFTListing[] memory allListings = new NFTListing[](totalListings);
+
+        // Iterate through the mapping and populate the array
+        for (uint256 i = 0; i < totalListings; i++) {
+            allListings[i] = listings[i];
+        }
+
+        return allListings;
     }
 }

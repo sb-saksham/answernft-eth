@@ -20,13 +20,7 @@ function Dashboard() {
             <Navbar.Collapse>
               <Nav className="me-auto">
                 <Nav.Item className='mx-1'>
-                  <NavLink style={{ textDecoration: "none", color: "black" }} to="/individual/">Individual</NavLink>
-                </Nav.Item>
-                <Nav.Item className='mx-1'>
-                  <NavLink style={{ textDecoration: "none", color: "black" }} to="/institution/">Institution</NavLink>
-                </Nav.Item>
-                <Nav.Item className='mx-1'>
-                  <NavLink style={{ textDecoration: "none", color: "black" }} to="/company/">Company</NavLink>
+                  <NavLink style={{ textDecoration: "none", color: "black" }} to="/my/nfts/">My AnswerNFTs</NavLink>
                 </Nav.Item>
               </Nav>
             </Navbar.Collapse>
