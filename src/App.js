@@ -2,7 +2,7 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import RequireAuth from "./hoc/RequireAuth";
-import Dashboard from "./components/UI/Dasboard";
+import Dashboard from "./components/UI/Dashboard";
 import Homepage from './components/Homepage';
 import MyNfts from "./components/MyNfts";
 

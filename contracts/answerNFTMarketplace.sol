@@ -25,6 +25,7 @@ contract AnswerNFTMarketplace is IERC721Receiver, Ownable, Pausable {
     }
 
     mapping(uint256 => NFTListing) public listings;
+    uint256 totalListings;
 
     constructor(
         address _marketplaceAddress,
@@ -56,6 +57,7 @@ contract AnswerNFTMarketplace is IERC721Receiver, Ownable, Pausable {
             tokenId
         );
         listings[tokenId] = NFTListing({seller: msg.sender, price: price});
+        totalListings++;
     }
 
     function buyNFT(uint256 tokenId, bytes memory answer) public payable {
@@ -100,11 +102,10 @@ contract AnswerNFTMarketplace is IERC721Receiver, Ownable, Pausable {
             msg.sender,
             tokenId
         );
+        totalListings--;
     }
 
     function getAllListings() public view returns (NFTListing[] memory) {
-        uint256 totalListings = listings.length; // Adjust this as per your contract
-
         // Create an array to store the listings
         NFTListing[] memory allListings = new NFTListing[](totalListings);
 
@@ -114,5 +115,11 @@ contract AnswerNFTMarketplace is IERC721Receiver, Ownable, Pausable {
         }
 
         return allListings;
+    }
+
+    function getNftListing(
+        uint256 _tokenId
+    ) public view returns (NFTListing memory) {
+        return listings[_tokenId];
     }
 }

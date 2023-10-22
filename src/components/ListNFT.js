@@ -12,7 +12,7 @@ import AnswerNFTArtifacts from "../artifacts/contracts/answerNFT.sol/AnswerNFT.j
 import AnswerNFTMarketplaceArtifacts from "../artifacts/contracts/answerNFTMarketplace.sol/AnswerNFTMarketplace.json";
 
 const MarketContractDetails = {
-    address: "0xb877474EA521D4eF83E7e42A788Da769000a7EDc",
+    address: "0xf826587F572e6A0de20e33b9b70D0e9217E36F38",
     abi: AnswerNFTMarketplaceArtifacts.abi
 }
 const ContractDetails = {
